@@ -1,0 +1,29 @@
+<div class="playlist_container">
+    <div>
+        <p>Your library</p>
+        <button>+</button>
+    </div>
+
+
+    <div>
+        @if (playlist.length > 0) {
+        <ul style="list-style: none;margin: 0;padding: 0;">
+            @for(playlist of playlist;track playlist){
+                <li>
+                    <div>
+                        <span>image</span>
+                        <span>playlist name</span>
+                    </div>
+                    <button>:</button>
+                </li>
+            }
+        </ul>
+        }@else{
+        <div>
+            <span>Create your playlist</span>
+            <span>Start now</span>
+            <button>Create playlist</button>
+        </div>
+        }
+    </div>
+</div>

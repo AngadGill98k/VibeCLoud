@@ -1,0 +1,29 @@
+<div class="main_container">
+    @if (service.show_playlist()) {
+        <app-playlist></app-playlist> 
+    }
+    <div >
+        <div class="main_search">
+            <input type="text" placeholder="search" [(ngModel)]="search" (change)="searchSong($event)" />
+            <button (click)="searchSongButton()">Search</button>
+        </div>
+
+
+        <div>
+            <!-- thi logic s for search page i ake full flegded music page -->
+                <!-- @if (songs.length > 0) {
+                    <ul style="list-style: none;padding: 0;margin: 0;">
+                    @for(song of songs;track song){
+                        <li (click)="handleSong(song)">
+                            <div>
+                                <span>image</span>
+                                <span>song name </span>
+                                <span>artist </span>
+                            </div>
+                        </li>
+                    }
+                    </ul>
+                } -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<app-navbar></app-navbar>
+<div>
+    <div>
+        <p>Albums</p>
+        <ul>
+            @if(albums.length > 0){
+                @for(album of albums;track album){
+                    <li>
+                        <span>image</span>
+                        <span>album name</span>
+                    </li>
+                }
+            }@else {
+                <div>
+                    <button (click)="createAlbum()">create album</button>
+                </div>
+            }
+        </ul>
+    </div>
+
+
+    <div>
+        <p>Playlist</p>
+        <ul>
+            @if(playlist.length > 0){
+                @for(playlist of playlist;track playlist){
+                    <li>
+                        <span>image</span>
+                        <span>playlist name</span>
+                    </li>
+                }
+            }@else {
+                <div>
+                    <span>No playlist found</span>
+                </div>
+            }
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,11 @@
+.nav_container{
+    display: flex;
+    justify-content: space-between;
+    background-color: aqua;
+    box-sizing: border-box;
+    height: 5%;
+        div{
+            display: flex;
+            gap: 10px;
+        } 
+}
