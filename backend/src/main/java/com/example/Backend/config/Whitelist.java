@@ -12,11 +12,11 @@ public class Whitelist {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/signin", "/signup")
+                        .ignoringRequestMatchers("/signin", "/signup","/access","/csrf-token")
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signin", "/signup", "/refresh","").permitAll() // whitelist
+                        .requestMatchers("/signin", "/signup", "/access","/csrf-token").permitAll() // whitelist
                         .anyRequest().authenticated() // everything else requires auth
                 );
 

@@ -26,6 +26,7 @@ Singin(){
     headers: {
       'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify({
       name: this.name,
       mail: this.mail,

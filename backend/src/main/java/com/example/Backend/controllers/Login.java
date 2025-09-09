@@ -43,6 +43,7 @@ public class Login {
     public ResponseEntity<Response<User_dto>> signin(@RequestBody Login_dto user ){
         Response<User_dto> res=login.signin(user);
         String refreshToken=jwt.refresh_Token(res.getData().getId());
+        res.setRefresh_token(refreshToken);
         ResponseCookie cookie=ResponseCookie.from("token",refreshToken)
                 .httpOnly(true)
                 .secure(false)
@@ -55,23 +56,16 @@ public class Login {
                 .body(res);
     }
 
-    @GetMapping("/refresh")
-    public Response<User_dto> refresh(@CookieValue(value = "token")String refresh_token){
-        Log.log.info("req came Login(refresh) Refresh token: {}", refresh_token);
-        Response<User_dto> res = new Response<User_dto>();
-        try {
-            boolean validity = jwt.extract_token(refresh_token);
-//            if (validity) {
-                String access_token = jwt.refresh_Token(refresh_token);
-                res.setAccess_token(access_token);
-                res.setMsg(true);
-                res.setMessage("token validated adn generated");
-                return res;
-//            } else {
-//                res.setMsg(false);
-//                res.setMessage("token not validated");
-//                return res;
-//            }
+    @GetMapping("/access")
+    public Response access(@CookieValue(value = "token")String refresh_token){
+        Response res = new Response();
+        try {Log.log.info("refresh_token: {}", refresh_token);
+            String userid = jwt.extract_token(refresh_token);
+            String access_Token = jwt.access_Token(userid);
+            res.setAccess_token(access_Token);
+            res.setMsg(true);
+            res.setMessage("token validated adn generated");
+            return res;
         }catch(Exception e){
             res.setMsg(false);
             res.setMessage(e.getMessage());

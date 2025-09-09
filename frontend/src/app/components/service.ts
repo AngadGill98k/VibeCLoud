@@ -35,19 +35,32 @@ export class Service {
     }
 
     async refresh_token() {
-        fetch(`http://localhost:8080/refresh`, {
+    try {
+        const res = await fetch(`http://localhost:8080/access`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
-            credentials: 'include'
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log(data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+            credentials: 'include' // important for sending cookies
+        });
+
+        if (!res.ok) {
+            // handle non-200 responses
+            console.error('HTTP error', res.status);
+            return;
+        }
+
+        // Only parse JSON if the response has content
+        const text = await res.text();
+        if (!text) {
+            console.warn('Empty response from server');
+            return;
+        }
+
+        const data = JSON.parse(text);
+        console.log('Access token response:', data);
+    } catch (error) {
+        console.error('Fetch error:', error);
     }
+}
 }
