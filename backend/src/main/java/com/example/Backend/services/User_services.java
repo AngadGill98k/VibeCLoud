@@ -11,6 +11,9 @@ import com.example.Backend.repository.User_repo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -30,10 +33,7 @@ public class User_services {
     public Response<Albums> create_album(MultipartFile[] files, String artist_name, String album_name, String genre, String userid){
         Response<Albums> res = new Response<>();
         try {
-            for (int i = 0; i < files.length; i++) {
-                MultipartFile file = files[i];
-                Log.log.info("(services.User.create_album) files rec {}", file.getOriginalFilename());
-            }
+
             Optional<User> user = user_repo.findById(userid);
             Log.log.info("(services.User.create_album) userid {}", userid);
             Albums album=new Albums();
@@ -41,10 +41,25 @@ public class User_services {
             album.setAlbum_name(album_name);
             album.setGenre(genre);
             album.setArtist_id(user.get().getId());
-//            album.setImage_path();
+
+            Path project_dir= Paths.get("").toAbsolutePath();
+            Path uploads=project_dir.resolve("uploads");
+            File upload=uploads.toFile();
+            if(!upload.exists()){
+                upload.mkdir();
+            }
+            for (int i = 0; i < files.length; i++) {
+                MultipartFile file = files[i];
+                Log.log.info("(services.User.create_album) files rec {}", file.getOriginalFilename());
+                File destination=new File(upload,file.getOriginalFilename());
+                file.transferTo(destination);
+                album.setImage_path(file.getOriginalFilename());
+            }
+
             album_repo.save(album);
             user.get().setAlbums(album.getId());
             user_repo.save(user.get());
+
             res.setMsg(true);
             res.setMessage("saved album and updated user");
             res.setData(album);
@@ -82,13 +97,28 @@ public class User_services {
         }
     }
 
-    public Response<Playlists> create_playlist(String userid,String playlistName){
+    public Response<Playlists> create_playlist(String userid,String playlistName,MultipartFile[] files){
         Response<Playlists> res = new Response<>();
         try {
             User user = user_repo.findById(userid).get();
             Playlists playlist=new Playlists();
             playlist.setPlaylistName(playlistName);
 //            playlist.setPlaylistImage();
+            Path project_dir= Paths.get("").toAbsolutePath();
+            Path uploads=project_dir.resolve("uploads");
+            File upload=uploads.toFile();
+            if(!upload.exists()){
+                upload.mkdir();
+            }
+            for (int i = 0; i < files.length; i++) {
+                MultipartFile file = files[i];
+                Log.log.info("(services.User.create_album) files rec {}", file.getOriginalFilename());
+                File destination=new File(upload,file.getOriginalFilename());
+                file.transferTo(destination);
+                playlist.setPlaylistImage(file.getOriginalFilename());
+            }
+
+
             playlist_repo.save(playlist);
             user.setPlaylists(playlist.getId());
             user_repo.save(user);

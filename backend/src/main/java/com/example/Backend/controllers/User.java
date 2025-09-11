@@ -45,7 +45,7 @@ public class User {
                                                HttpServletRequest req){
         String userid=req.getAttribute("userid").toString();
         Log.log.info("data recived (User.create_playlist) {} {}", playlist_name,userid);
-        Response<Playlists> res= user_sevices.create_playlist(playlist_name,userid);
+        Response<Playlists> res= user_sevices.create_playlist(playlist_name,userid,files);
         return res;
     }
 
