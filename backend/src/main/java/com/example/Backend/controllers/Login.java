@@ -4,12 +4,13 @@ package com.example.Backend.controllers;
 import com.example.Backend.config.Jwt;
 import com.example.Backend.dto.Response;
 import com.example.Backend.dto.User_dto;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.Cookie;
 import com.example.Backend.config.Log;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +28,19 @@ public class Login {
         this.login = login;
         this.jwt = jwt;
     }
+
     @GetMapping("/csrf-token")
-    public CsrfToken csrf(CsrfToken token) {
-        return token; // contains headerName, parameterName, and token value
+    public CsrfToken csrf(CsrfToken token, HttpServletResponse response) {
+        // Create a cookie with the CSRF token value
+        Cookie cookie = new Cookie("XSRF-TOKEN", token.getToken());
+        cookie.setPath("/");                // available for all paths
+        cookie.setHttpOnly(false);          // must be false so Angular can read it
+        cookie.setSecure(true);             // true if using HTTPS
+        cookie.setMaxAge(-1);               // session cookie
+
+        response.addCookie(cookie);
+
+        return token; // still return JSON if you want to debug
     }
     @PostMapping("/signup")
     public User signup(@RequestBody Login_dto user ){
