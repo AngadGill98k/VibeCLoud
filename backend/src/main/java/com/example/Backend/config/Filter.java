@@ -42,6 +42,7 @@ Log.log.info("(config.Filter) access tokne is expired ");
         if(token != null && jwt.validateToken(token)) {
             try {
                 String userid = jwt.extract_token(token);
+                request.setAttribute("userid", userid);
 //Log.log.info("userid (config.Filter):{}", userid);
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userid, null, List.of());

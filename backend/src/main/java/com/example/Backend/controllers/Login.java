@@ -42,14 +42,6 @@ public class Login {
 
         return token; // still return JSON if you want to debug
     }
-    @PostMapping("/signup")
-    public User signup(@RequestBody Login_dto user ){
-        System.out.println(user.toString());
-        Log.log.info("Signin attempt for user: {}", user.getMail());
-        User res = login.signup(user);
-        return res;
-    }
-
     @PostMapping("/signin")
     public ResponseEntity<Response<User_dto>> signin(@RequestBody Login_dto user ){
         Response<User_dto> res=login.signin(user);
@@ -67,10 +59,18 @@ public class Login {
                 .body(res);
     }
 
+    @PostMapping("/signup")
+    public User signup(@RequestBody Login_dto user ){
+        //Log.log.info("Signin attempt for user: {}", user.getMail());
+        User res = login.signup(user);
+        return res;
+    }
+
     @GetMapping("/access")
     public Response access(@CookieValue(value = "token")String refresh_token){
         Response res = new Response();
-        try {Log.log.info("refresh_token: {}", refresh_token);
+        try {
+//Log.log.info("refresh_token: {}", refresh_token);
             String userid = jwt.extract_token(refresh_token);
             String access_Token = jwt.access_Token(userid);
             res.setAccess_token(access_Token);

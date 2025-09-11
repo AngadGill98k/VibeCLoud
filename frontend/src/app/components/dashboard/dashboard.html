@@ -4,13 +4,13 @@
         <p>Albums</p>
         <ul>
             @if(albums.length > 0){
-                @for(album of albums;track album){
+                @for(album of albums;track album.id){
                     <li>
                         <span>image</span>
-                        <span>album name</span>
+                         <span>{{ album.album_name }}</span>
                     </li>
                 }
-            }@else {
+            }@else { 
                 <div>
                     <button (click)="createAlbum()">create album</button>
                 </div>

@@ -36,7 +36,7 @@ export class CAlbum {
     formdata.append('artist_name', this.artist_name)
     formdata.append('genre', this.selectedGenre)
     formdata.append('image', this.image as Blob)
-    console.log(this.service.access_token,this.service.get_csrf());
+    // console.log(this.service.access_token,this.service.get_csrf());
     fetch(`http://localhost:8080/create_album`,{
       method: 'POST',
       body: formdata,

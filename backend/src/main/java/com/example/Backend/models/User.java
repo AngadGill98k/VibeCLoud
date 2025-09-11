@@ -55,8 +55,8 @@ public class User {
         this.albums.add(albums);
     }
 
-    public void setPlaylists(ArrayList<String> playlists) {
-        this.playlists = playlists;
+    public void setPlaylists(String playlists) {
+        this.playlists.add(playlists);
     }
 }
 
