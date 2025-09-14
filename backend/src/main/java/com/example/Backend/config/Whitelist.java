@@ -20,7 +20,7 @@ public class Whitelist {
                 )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/signin", "/signup", "/access","/csrf-token").permitAll() // whitelist
+                        .requestMatchers("/signin", "/signup", "/access","/csrf-token","/uploads/**").permitAll() // whitelist
                         .anyRequest().authenticated() // everything else requires auth
                 )
                 .addFilterBefore(new Filter(jwt), UsernamePasswordAuthenticationFilter.class);

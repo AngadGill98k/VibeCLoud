@@ -1,17 +1,46 @@
 <div class="main_container">
-    @if (service.show_playlist()) {
-        <app-playlist></app-playlist> 
-    }
-    <div >
+
+    <app-playlist ></app-playlist>
+
+    <div class="main_wrapper">
         <div class="main_search">
-            <input type="text" placeholder="search" [(ngModel)]="search" (change)="searchSong($event)" />
-            <button (click)="searchSongButton()">Search</button>
+            <div style="height: 5vh;display: flex;background-color: rgb(82, 82, 82);;border-radius: 220px;box-sizing: border-box;">
+            <input style="border: none; border-radius: 220px;padding-left: 20px;box-sizing: border-box;background-color: rgb(82, 82, 82);" type="text" placeholder="search" [(ngModel)]="search" (change)="searchSong($event)" />
+            <button style="border: none; border-radius: 220px;background-color: rgb(82, 82, 82);" (click)="searchSongButton()">Search</button>
+            </div>
         </div>
 
 
-        <div>
+        <div class="main_page">
+            <div>
+                <span>Cateory</span>
+                <ul>
+
+                </ul>
+            </div>
+
+            <div>
+                <span>Cateory</span>
+                <ul>
+                    
+                </ul>
+            </div>
+
+            <div>
+                <span>Cateory</span>
+                <ul>
+                    
+                </ul>
+            </div>
+
+            <div>
+                <span>Cateory</span>
+                <ul>
+                    
+                </ul>
+            </div>
             <!-- thi logic s for search page i ake full flegded music page -->
-                <!-- @if (songs.length > 0) {
+            <!-- @if (songs.length > 0) {
                     <ul style="list-style: none;padding: 0;margin: 0;">
                     @for(song of songs;track song){
                         <li (click)="handleSong(song)">

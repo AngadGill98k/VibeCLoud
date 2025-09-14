@@ -1,1 +1,26 @@
-<p>album works!</p>
+<app-navbar></app-navbar>
+<div class="album_container">
+    <app-playlist></app-playlist>
+
+
+    <div>
+        <!-- <div>          set as background image
+            <img [src]="'http://localhost:8080/' + album.image_path" alt="album image">
+        </div> -->
+
+
+        <div>
+            <div>
+                <h3>{{ album.album_name }}</h3>
+                <button (click)="addsong()">+</button>
+            </div>
+            <ul>
+                @for(song of album;track song){
+                <li>
+                    
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

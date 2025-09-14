@@ -1,0 +1,23 @@
+<div class="a-songs_container">
+    <div>
+        <p>add a song</p>
+        <button (click)="close()">x</button>
+    </div>
+
+
+    <div>
+        <input type="text" placeholder="song name" [(ngModel)]="song_name">
+        <input type="file" placeholder="image" (change)="onFileSelected($event)">
+        <input type="file" placeholder="audio" (change)="onAudioSelected($event)">
+        <select [(ngModel)]="selectedGenre">
+            <option value="">Select Genre</option>
+            <option value="pop">Pop</option>
+            <option value="rock">Rock</option>
+            <option value="jazz">Jazz</option>
+            <option value="electronic">Electronic</option>
+            <option value="hiphop">Hip Hop</option>
+        </select>
+
+        <button (click)="AddSong()">Add</button>
+    </div>
+</div>

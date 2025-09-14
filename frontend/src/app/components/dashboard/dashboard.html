@@ -1,38 +1,42 @@
 <app-navbar></app-navbar>
-<div>
+<div class="dashboard_container">
     <div>
-        <p>Albums</p>
-        <ul>
+        <p>Albums  <button (click)="createAlbum()">+</button></p>
+        <ul style="list-style: none;margin: 0;padding: 0;display: flex;gap: 15px;flex-direction: row;box-sizing: border-box;">
             @if(albums.length > 0){
-                @for(album of albums;track album.id){
-                    <li>
-                        <span>image</span>
-                         <span>{{ album.album_name }}</span>
-                    </li>
-                }
-            }@else { 
-                <div>
-                    <button (click)="createAlbum()">create album</button>
+            @for(album of albums;track album.id){
+            <li (click)="openAlbum(album)" >
+                <div class="albums">
+                    <img [src]="'http://localhost:8080/' + album.image_path" alt="album image">
+                    <span>{{ album.album_name }}</span>
                 </div>
+            </li>
+            }
+            }@else {
+            <div>
+                <button (click)="createAlbum()">create album</button>
+            </div>
             }
         </ul>
     </div>
 
 
     <div>
-        <p>Playlist</p>
-        <ul>
+        <p>Playlist <button (click)="createPlaylist()">+</button></p>
+        <ul style="list-style: none;margin: 0;padding: 0;display: flex;gap: 15px;flex-direction: row;box-sizing: border-box;">
             @if(playlist.length > 0){
-                @for(playlist of playlist;track playlist){
-                    <li>
-                        <span>image</span>
-                        <span>playlist name</span>
-                    </li>
-                }
-            }@else {
-                <div>
-                    <span>No playlist found</span>
+            @for(playlist of playlist;track playlist.id){
+            <li (click)="openPlaylist(playlist)" >
+                <div class="albums">
+                    <img [src]="'http://localhost:8080/' + playlist.playlistImage" alt="playlist image">
+                    <span>{{ playlist.playlistName }}</span>
                 </div>
+            </li>
+            }
+            }@else {
+            <div>
+                <button (click)="createPlaylist()">create playlist</button>
+            </div>
             }
         </ul>
     </div>

@@ -1,0 +1,10 @@
+<div class="c-playlist_container">
+    <div>
+        <span>Create a playlist</span>
+        <button (click)="close()">close</button>
+    </div>
+
+    <input type="text" placeholder="playlist name" [(ngModel)]="playlist_name">
+    <input type="file" placeholder="image" (change)="onFileSelected($event)">
+    <button (click)="createPlaylist()">Create</button>
+</div>

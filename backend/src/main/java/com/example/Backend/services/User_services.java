@@ -4,6 +4,7 @@ import com.example.Backend.config.Log;
 import com.example.Backend.dto.Response;
 import com.example.Backend.models.Albums;
 import com.example.Backend.models.Playlists;
+import com.example.Backend.models.Song;
 import com.example.Backend.models.User;
 import com.example.Backend.repository.Album_repo;
 import com.example.Backend.repository.Playlist_repo;
@@ -29,6 +30,12 @@ public class User_services {
         this.playlist_repo = playlist_repo;
     }
 
+    public Response get_albums(){
+        Response res = new Response();
+
+
+        return res;
+    }
 
     public Response<Albums> create_album(MultipartFile[] files, String artist_name, String album_name, String genre, String userid){
         Response<Albums> res = new Response<>();
@@ -51,9 +58,22 @@ public class User_services {
             for (int i = 0; i < files.length; i++) {
                 MultipartFile file = files[i];
                 Log.log.info("(services.User.create_album) files rec {}", file.getOriginalFilename());
-                File destination=new File(upload,file.getOriginalFilename());
+
+                // 1. Get original filename
+                String originalName = file.getOriginalFilename();
+
+                // 2. Sanitize: replace spaces and remove unsafe characters
+                String safeName = originalName.replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9._-]", "");
+
+                // 3. Add timestamp prefix to avoid duplicates
+                String finalName = System.currentTimeMillis() + "_" + safeName;
+
+                // 4. Save file
+                File destination = new File(upload, finalName);
                 file.transferTo(destination);
-                album.setImage_path(file.getOriginalFilename());
+
+                // 5. Save safe filename in DB
+                album.setImage_path(finalName);
             }
 
             album_repo.save(album);
@@ -97,12 +117,15 @@ public class User_services {
         }
     }
 
-    public Response<Playlists> create_playlist(String userid,String playlistName,MultipartFile[] files){
+    public Response<Playlists> create_playlist(String playlistName,String userid,MultipartFile[] files){
         Response<Playlists> res = new Response<>();
-        try {
+
+        try {Log.log.info("{}",userid);
             User user = user_repo.findById(userid).get();
+
             Playlists playlist=new Playlists();
             playlist.setPlaylistName(playlistName);
+            Log.log.info("{}",playlist);
 //            playlist.setPlaylistImage();
             Path project_dir= Paths.get("").toAbsolutePath();
             Path uploads=project_dir.resolve("uploads");
@@ -110,12 +133,24 @@ public class User_services {
             if(!upload.exists()){
                 upload.mkdir();
             }
+
             for (int i = 0; i < files.length; i++) {
                 MultipartFile file = files[i];
                 Log.log.info("(services.User.create_album) files rec {}", file.getOriginalFilename());
-                File destination=new File(upload,file.getOriginalFilename());
+                String originalName = file.getOriginalFilename();
+
+// Sanitize: replace spaces with underscores, remove special chars if needed
+                String safeName = originalName.replaceAll("\\s+", "_");
+
+// Optional: prepend timestamp to avoid duplicate filenames
+                safeName = System.currentTimeMillis() + "_" + safeName;
+
+// Save file with safe name
+                File destination = new File(upload, safeName);
                 file.transferTo(destination);
-                playlist.setPlaylistImage(file.getOriginalFilename());
+
+// Store safe name in DB
+                playlist.setPlaylistImage(safeName);
             }
 
 
@@ -127,6 +162,7 @@ public class User_services {
             res.setData(playlist);
             return res;
         }catch (Exception e){
+            Log.log.error(e.getMessage());
             res.setMsg(false);
             res.setMessage(e.getMessage());
             return res;
@@ -154,6 +190,108 @@ public class User_services {
             res.setMsg(false);
             res.setMessage(e.getMessage());
             e.printStackTrace();
+            return res;
+        }
+    }
+
+    public Response<Albums> add_song_album(String album_name,String userid,String song_name,String genre,String album_id,MultipartFile[] files,MultipartFile[] audios){
+        Response<Albums> res=new Response();
+        try {
+            Optional<Albums> albums = album_repo.findById(album_id);
+            Albums album=albums.get();
+            Song song=new Song();
+            song.setArtistId(userid);
+            song.setSong_name(song_name);
+            song.setArtistName(album.getArtist_name());
+            song.setAlbum(album_name);
+
+            Path project_dir= Paths.get("").toAbsolutePath();
+            Path uploads=project_dir.resolve("uploads");
+            File upload=uploads.toFile();
+            if(!upload.exists()){
+                upload.mkdir();
+            }
+            for (MultipartFile audio : audios) {
+                // 1. Get original filename
+                String originalName = audio.getOriginalFilename();
+
+                // 2. Sanitize: replace spaces and remove unsafe characters
+                String safeName = originalName.replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9._-]", "");
+
+                // 3. Add timestamp prefix to avoid duplicates
+                String finalName = System.currentTimeMillis() + "_" + safeName;
+
+                // 4. Save file
+                File destination = new File(upload, finalName);
+                audio.transferTo(destination);
+
+
+                song.setAudio_path(finalName);
+            }
+            for (MultipartFile file : files) {
+                // 1. Get original filename
+                String originalName = file.getOriginalFilename();
+
+                // 2. Sanitize: replace spaces and remove unsafe characters
+                String safeName = originalName.replaceAll("\\s+", "_").replaceAll("[^a-zA-Z0-9._-]", "");
+
+                // 3. Add timestamp prefix to avoid duplicates
+                String finalName = System.currentTimeMillis() + "_" + safeName;
+
+                // 4. Save file
+                File destination = new File(upload, finalName);
+                file.transferTo(destination);
+
+
+                song.setImage_path(finalName);
+            }
+            album.setSongs(song);
+            album_repo.save(album);
+            res.setMsg(true);
+            res.setMessage("saved song in album");
+            res.setData(album);
+            return res;
+        }catch(Exception e){
+
+            res.setMsg(false);
+            res.setMessage(e.getMessage());
+            Log.log.error(e.getMessage());
+            return res;
+        }
+    }
+
+    public Response<Albums> get_songs_album(String albumid){
+        Response<Albums> res= new Response();
+        try{
+            Log.log.info("req cam in (service.User.get_songs_album) ");
+            Optional<Albums> albums=album_repo.findById(albumid);
+            Albums album=albums.get();
+            res.setMessage("found th album");
+            res.setMsg(true);
+            res.setData(album);
+            return res;
+        }catch(Exception e){
+            res.setMsg(false);
+            res.setMessage(e.getMessage());
+            Log.log.error(e.getMessage());
+            return res;
+        }
+
+    }
+
+    public Response<Playlists> get_songs_playlist(String playlistid){
+        Response<Playlists> res=new Response<Playlists>();
+        try{
+            Optional<Playlists>playlists=playlist_repo.findById(playlistid);
+            Playlists playlist =playlists.get();
+            res.setMessage("found the songs int eh playlist");
+            res.setMsg(true);
+            res.setData(playlist);
+            return res;
+        }catch(Exception e){
+            res.setMsg(true);
+            res.setMessage(e.getMessage());
+            Log.log.error(e.getMessage());
             return res;
         }
     }

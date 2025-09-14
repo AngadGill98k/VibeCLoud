@@ -1,3 +1,23 @@
 .playlist_container{
-    background-color: aquamarine;
+    background-color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    padding: 5px;
+    height: 100%;
+    
+}
+.playlist_list{
+    box-sizing: border-box;
+    
+}
+.temp_con{
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: rgb(82, 82, 82);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
