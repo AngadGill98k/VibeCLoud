@@ -22,6 +22,13 @@ public class User {
         this.user_services = user_services;
     }
 
+    @GetMapping("/get_main_page")
+    publiv Response<Object> get_main_page(){
+        Log.log.info("req recieve at (controller.get_main_page)");
+        Reponse res=user_services.get_main_page();
+        return res;
+    }
+    
     @GetMapping("/get_albums")
     public Response get_albums(){
         Log.log.info("sending albums at (controller.get_albums)");
