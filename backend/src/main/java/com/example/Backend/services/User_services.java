@@ -295,5 +295,26 @@ public class User_services {
             return res;
         }
     }
+    public Response<Object> get_main_page(){
+        Response<Object> res=new Reponse<Object>;
+        try{
+            ArratList<Song> genre=album_repo.findGenre("");
+
+
+            ArrayList<albums> album_genre=album_repo.findAlbumGenre("");
+            res.setMsg(true);
+            res.setMessage("found the albumd and songs and sorted");
+            res.data()
+
+            return res;
+        }catch(Exception e){
+            res.setMsg(false);
+            res.setMessage(e.getmessage());
+            Log.log.error(e.getmessage());
+            return res;
+        }
+        
+        
+    }
 
 }
